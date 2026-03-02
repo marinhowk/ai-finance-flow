@@ -24,4 +24,44 @@ def login():
     senha = input("Senha: ")
 
 def cadastro():
-    pass
+    exibir_subtitulo("Realize o seu cadastro")
+
+    nome = input("Nome: ")
+    email = input("Email: ")
+    senha = input("Senha: ")
+    confirmar_senha = input("Confirme a sua senha: ")
+
+    if not nome or not email or not senha or not confirmar_senha:
+        print("É necessário que todos os campos sejam preenchidos!")
+        limpar_terminal()
+        return cadastro()
+
+    if senha != confirmar_senha:
+        print("As senhas digitadas são diferentes!")
+        limpar_terminal()
+        return cadastro()
+
+def redefinir_senha():
+    exibir_subtitulo("Redefinir senha")
+
+    email = input("Digite o seu e-mail de cadastro: ")
+    limpar_terminal()
+
+def escolher_opcao():
+    try:
+        opcao_escolhida = int(input("Escolha uma opção: "))
+
+        match opcao_escolhida:
+            case 1:
+                login()
+            case 2:
+                cadastro()
+            case 3:
+                redefinir_senha()
+            case _:
+                print("Opção inválida.")
+    except:
+        limpar_terminal()
+        escolher_opcao()
+
+    

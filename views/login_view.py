@@ -4,10 +4,19 @@ import os
 
 cs = Console()
 
-def exibir_subtitulo(texto):
-    print("=" * 50)
-    cs.print(f"[bold green]{texto}")
-    print("=" * 50)
+def exibir_caixa(titulo, largura=60):
+    topo = "╔" + "═" * (largura - 2) + "╗"
+    fundo = "╚" + "═" * (largura - 2) + "╝"
+    linha_vazia = "║" + " " * (largura - 2) + "║"
+    
+    cs.print(f"[bold green]{topo}")
+    cs.print(f"[bold green]{linha_vazia}")
+    
+    titulo_formatado = titulo.center(largura - 2)
+    cs.print(f"[bold green]║{titulo_formatado}║")
+    
+    cs.print(f"[bold green]{linha_vazia}")
+    cs.print(f"[bold green]{fundo}")
   
 def limpar_terminal():
     os.system("cls")
@@ -18,13 +27,13 @@ def menu():
     cs.print("[bold green]3. Esqueci minha senha")
     
 def login():
-    exibir_subtitulo("Realize o seu login")
+    exibir_caixa("Realize o seu login")
 
     email = input("Email: ")
     senha = input("Senha: ")
 
 def cadastro():
-    exibir_subtitulo("Realize o seu cadastro")
+    exibir_caixa("Realize o seu cadastro")
 
     nome = input("Nome: ")
     email = input("Email: ")
@@ -42,7 +51,7 @@ def cadastro():
         return cadastro()
 
 def redefinir_senha():
-    exibir_subtitulo("Redefinir senha")
+    exibir_caixa("Redefinir senha")
 
     email = input("Digite o seu e-mail de cadastro: ")
     limpar_terminal()
@@ -63,5 +72,7 @@ def escolher_opcao():
     except:
         limpar_terminal()
         escolher_opcao()
+
+cadastro()
 
     

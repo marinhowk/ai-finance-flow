@@ -4,6 +4,7 @@ import os
 
 cs = Console()
 
+
 def exibir_caixa(titulo, largura=60):
     topo = "╔" + "═" * (largura - 2) + "╗"
     fundo = "╚" + "═" * (largura - 2) + "╝"
@@ -17,17 +18,20 @@ def exibir_caixa(titulo, largura=60):
     
     cs.print(f"[bold green]{linha_vazia}")
     cs.print(f"[bold green]{fundo}")
-  
+
 def limpar_terminal():
     os.system("cls")
 
 def menu():
+    limpar_terminal()
     exibir_caixa("Menu Principal")
+    
     cs.print("[bold green]1. [/]Realizar login")
     cs.print("[bold green]2. [/]Relizar cadastro")
     cs.print("[bold green]3. [/]Esqueci minha senha")
     
 def login():
+    limpar_terminal()
     exibir_caixa("Realize o seu login")
 
     email = input("Email: ")
@@ -36,6 +40,7 @@ def login():
     return email, senha
 
 def cadastro():
+    limpar_terminal()
     exibir_caixa("Realize o seu cadastro")
 
     nome = input("Nome: ")
@@ -56,6 +61,7 @@ def cadastro():
     return nome, email, senha
 
 def redefinir_senha():
+    limpar_terminal()
     exibir_caixa("Redefinir senha")
 
     email = input("Digite o seu e-mail de cadastro: ")
@@ -92,8 +98,7 @@ def escolher_opcao():
                 print("Opção inválida.")
     except:
         limpar_terminal()
+        menu()
         escolher_opcao()
-
-
 
     

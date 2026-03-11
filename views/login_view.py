@@ -1,6 +1,14 @@
 # --- PIP INSTALL RICH [BIBLIOTECA PARA APLICAR ESTILIZAÇÃO NO TERMINAL]
-from rich.console import Console 
+from models.user_model import Usuarios
+from config.database import BancoDeDados
+from controllers.user_controller import UsuariosController
+from rich.console import Console
+from services.email_service import enviar_email 
 import os
+import sys
+
+db = BancoDeDados()
+uc = UsuariosController(db)
 
 cs = Console()
 
@@ -10,14 +18,14 @@ def exibir_caixa(titulo, largura=60):
     fundo = "╚" + "═" * (largura - 2) + "╝"
     linha_vazia = "║" + " " * (largura - 2) + "║"
     
-    cs.print(f"[bold green]{topo}")
-    cs.print(f"[bold green]{linha_vazia}")
+    cs.print(f"[bold blue]{topo}")
+    cs.print(f"[bold blue]{linha_vazia}")
     
     titulo_formatado = titulo.center(largura - 2)
-    cs.print(f"[bold green]║{titulo_formatado}║")
+    cs.print(f"[bold blue]║{titulo_formatado}║")
     
-    cs.print(f"[bold green]{linha_vazia}")
-    cs.print(f"[bold green]{fundo}")
+    cs.print(f"[bold blue]{linha_vazia}")
+    cs.print(f"[bold blue]{fundo}")
 
 def limpar_terminal():
     os.system("cls")
@@ -26,9 +34,10 @@ def menu():
     limpar_terminal()
     exibir_caixa("Menu Principal")
     
-    cs.print("[bold green]1. [/]Realizar login")
-    cs.print("[bold green]2. [/]Relizar cadastro")
-    cs.print("[bold green]3. [/]Esqueci minha senha")
+    cs.print("[bold blue]1. [/]Realizar login")
+    cs.print("[bold blue]2. [/]Relizar cadastro")
+    cs.print("[bold blue]3. [/]Esqueci minha senha")
+    cs.print("[bold blue]4. [/]Sair")
     
 def login():
     limpar_terminal()
@@ -53,12 +62,35 @@ def cadastro():
         limpar_terminal()
         return cadastro()
 
-    if senha != confirmar_senha:
+    elif senha != confirmar_senha:
         print("As senhas digitadas são diferentes!")
         limpar_terminal()
         return cadastro()
-    
-    return nome, email, senha
+
+    tentativas = 3
+    usuario = Usuarios(nome, email, senha)
+    codigo = enviar_email(email)
+
+    while tentativas > 0:
+        codigo_digitado = cs.int(input("\n[bold blue]Insira o código de verificação enviado em seu e-mail: "))
+
+        if codigo_digitado == codigo:
+            uc.cadastro(usuario)
+            menu()
+        else:
+            tentativas -= 1
+            cs.print(f"[bold red] Código inválido.[/] Tentativas restantes? {tentativas}")
+
+    cs.print("[bold red]Número de tentativas atingido. Código expirado.")
+
+def confirmacao_email():
+    limpar_terminal()
+    exibir_caixa("Confirmação de E-mail")
+
+    print("Insira o código de verificação que foi enviado em seu e-mail")
+    codigo = cs.input("[bold blue]\nCódigo: ")
+
+    return codigo
 
 def redefinir_senha():
     limpar_terminal()
@@ -94,11 +126,14 @@ def escolher_opcao():
                 cadastro()
             case 3:
                 redefinir_senha()
+            case 4:
+                sys.exit()
             case _:
                 print("Opção inválida.")
     except:
-        limpar_terminal()
-        menu()
-        escolher_opcao()
+        sys.exit()
+        #limpar_terminal()
+        #menu()
+        #escolher_opcao()
 
     

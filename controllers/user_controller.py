@@ -8,12 +8,12 @@ class UsuariosController:
     def login():
         pass
 
-    def cadastro(self, usuario: Usuarios, email_verificado):
+    def cadastro(self, usuario: Usuarios):
         query = """
-        INSERT INTO usuarios (nome, email, senha, email_verificado)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO usuarios (nome, email, senha)
+        VALUES (%s, %s, %s)
         """
 
-        valores = (usuario.nome, usuario.email, usuario.senha, email_verificado)
+        valores = (usuario.nome, usuario.email, usuario.senha)
         self.cursor.execute(query, valores)
         self.conn.commit()

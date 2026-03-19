@@ -45,7 +45,10 @@ def login():
     email = input("Email: ")
     senha = input("Senha: ")
 
-    return email, senha
+    if ur.realizar_login(email, senha):
+        print("BemVindo.")
+    else:
+        print("Erro")
 
 def cadastro():
     limpar_terminal()

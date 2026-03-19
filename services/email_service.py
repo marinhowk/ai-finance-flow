@@ -10,7 +10,6 @@ EMAIL_ADDRESS =  os.getenv("EMAIL_ADDRESS")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
 def enviar_email(destinatario, codigo_gerado):
-    #codigo_gerado = random.randint(1000, 9999)
     assunto = "Verificação de Email"
     corpo_email = f"""
     <html>

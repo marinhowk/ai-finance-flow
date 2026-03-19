@@ -3,7 +3,23 @@ from models.user_model import Usuarios
 class UsuariosRepository:
     def __init__(self, db):
         self.conn = db.get_conexao()
-        self.cursor = self.conn.cursor()
+        self.cursor = self.conn.cursor(dictionary = True)
+
+    def buscar_email(self, email):
+        query = """
+        SELECT * FROM usuarios WHERE email = %s
+        """
+
+        self.cursor.execute(query, (email,))
+        return self.cursor.fetchone()
+
+    def realizar_login(self, email, senha):
+        usuario = self.buscar_email(email)
+
+        if not usuario:
+            return False
+        
+        return Usuarios.validar_senha(senha, usuario["senha"])
 
     def salvar_cadastro(self, usuario: Usuarios):
         query = """

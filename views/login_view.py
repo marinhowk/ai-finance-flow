@@ -8,8 +8,7 @@ import os
 import sys
 
 db = BancoDeDados()
-uc = UsuariosController(db)
-
+uc = UsuariosController()
 cs = Console()
 
 
@@ -57,31 +56,32 @@ def cadastro():
     senha = input("Senha: ")
     confirmar_senha = input("Confirme a sua senha: ")
 
-    if not nome or not email or not senha or not confirmar_senha:
-        print("É necessário que todos os campos sejam preenchidos!")
-        limpar_terminal()
+    validar_dados = uc.validar_dados(nome, email, senha, confirmar_senha)
+
+    if validar_dados["status"] == "erro":
+        print(validar_dados["mensagem"])
+        input("Pressionae ENTER para continuar.")
         return cadastro()
+    
+    else:
+        uc.enviar_email(email)
+    
+        tentativas = 3
 
-    elif senha != confirmar_senha:
-        print("As senhas digitadas são diferentes!")
-        limpar_terminal()
-        return cadastro()
+        while tentativas > 0:
+            codigo = cs.input("\n[bold blue]Insira o código de verificação enviado em seu e-mail: ")
 
-    tentativas = 3
-    usuario = Usuarios(nome, email, senha)
-    codigo = enviar_email(email)
+            validar_codigo = uc.validar_codigo(codigo)
 
-    while tentativas > 0:
-        codigo_digitado = cs.int(input("\n[bold blue]Insira o código de verificação enviado em seu e-mail: "))
+            if validar_codigo["status"] == "ok":
+                cs.input("Cadastro realizado, precione ENTER para realizar seu login na plataforma.")
+                return login()
+            
+            else:
+                tentativas -= 1
+                cs.print(f"[bold red]Código inválido.[/] Tentativas restantes? {tentativas}")
 
-        if codigo_digitado == codigo:
-            uc.cadastro(usuario)
-            menu()
-        else:
-            tentativas -= 1
-            cs.print(f"[bold red] Código inválido.[/] Tentativas restantes? {tentativas}")
-
-    cs.print("[bold red]Número de tentativas atingido. Código expirado.")
+        cs.print("[bold red]Número de tentativas atingido. Código expirado.")
 
 def confirmacao_email():
     limpar_terminal()

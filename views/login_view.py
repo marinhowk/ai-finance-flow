@@ -2,15 +2,15 @@
 from models.user_model import Usuarios
 from config.database import BancoDeDados
 from controllers.user_controller import UsuariosController
+from repository.user_repository import UsuariosRepository
 from rich.console import Console
-from services.email_service import enviar_email 
 import os
 import sys
 
 db = BancoDeDados()
+ur = UsuariosRepository(db)
 uc = UsuariosController()
 cs = Console()
-
 
 def exibir_caixa(titulo, largura=60):
     topo = "╔" + "═" * (largura - 2) + "╗"
@@ -55,6 +55,7 @@ def cadastro():
     email = input("Email: ")
     senha = input("Senha: ")
     confirmar_senha = input("Confirme a sua senha: ")
+    usuario = Usuarios(nome, email, senha)
 
     validar_dados = uc.validar_dados(nome, email, senha, confirmar_senha)
 
@@ -74,6 +75,7 @@ def cadastro():
             validar_codigo = uc.validar_codigo(codigo)
 
             if validar_codigo["status"] == "ok":
+                ur.salvar_cadastro(usuario)
                 cs.input("Cadastro realizado, precione ENTER para realizar seu login na plataforma.")
                 return login()
             

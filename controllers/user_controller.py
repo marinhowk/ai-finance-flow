@@ -11,8 +11,7 @@ class UsuariosController:
     def login():
         pass
 
-    @staticmethod
-    def validar_dados (nome, email, senha, confirmar_senha):
+    def validar_dados (self, nome, email, senha, confirmar_senha):
         if not nome or not email or not senha or not confirmar_senha:
             return {
                 "status" : "erro",

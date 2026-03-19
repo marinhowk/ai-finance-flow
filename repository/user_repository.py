@@ -13,14 +13,6 @@ class UsuariosRepository:
         self.cursor.execute(query, (email,))
         return self.cursor.fetchone()
 
-    def realizar_login(self, email, senha):
-        usuario = self.buscar_email(email)
-
-        if not usuario:
-            return False
-        
-        return Usuarios.validar_senha(senha, usuario["senha"])
-
     def salvar_cadastro(self, usuario: Usuarios):
         query = """
         INSERT INTO usuarios (nome, email, senha)

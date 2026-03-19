@@ -1,16 +1,30 @@
 from models.user_model import Usuarios
-from repository import user_repository
+from repository.user_repository import UsuariosRepository
+from config.database import BancoDeDados
 from services.email_service import enviar_email
 import random
 
-ur = user_repository
+db = BancoDeDados()
+ur = UsuariosRepository(db)
 
 class UsuariosController:
 
-    @staticmethod
-    def login():
-        pass
+    def reliazar_login(self, email, senha):
+        usuario = ur.buscar_email(email)
 
+        if not usuario:
+            return {
+                "status" : "erro",
+                "mensagem" : "E-mail e/ou senha inválidos."
+            }
+        else:
+            Usuarios.validar_senha(senha, usuario["senha"])
+
+            return {
+                "status" : "ok",
+                "mensagem" : "Login realizado com sucesso."
+            }
+        
     def validar_dados (self, nome, email, senha, confirmar_senha):
         if not nome or not email or not senha or not confirmar_senha:
             return {

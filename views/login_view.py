@@ -45,10 +45,12 @@ def login():
     email = input("Email: ")
     senha = input("Senha: ")
 
-    if ur.realizar_login(email, senha):
-        print("BemVindo.")
+    validar = uc.reliazar_login(email, senha)
+
+    if validar["status"] == "erro":
+        print(validar["mensagem"])
     else:
-        print("Erro")
+        print("BemVindo")
 
 def cadastro():
     limpar_terminal()

@@ -18,14 +18,20 @@ class UsuariosController:
                 "mensagem" : "E-mail e/ou senha inválidos."
             }
         else:
-            Usuarios.validar_senha(senha, usuario["senha"])
+            validar_senha = Usuarios.validar_senha(senha, usuario["senha"])
 
-            return {
-                "status" : "ok",
-                "mensagem" : "Login realizado com sucesso."
-            }
+            if validar_senha["status"] == "ok":
+                return {
+                    "status" : "ok",
+                    "mensagem" : "Credenciais validadas com sucesso."
+                }
+            else:
+                return {
+                    "status" : "erro",
+                    "mensagem" : "E-mail e/ou senha incorretos. Tente novamente."
+                }
         
-    def validar_dados (self, nome, email, senha, confirmar_senha):
+    def validar_dados(self, nome, email, senha, confirmar_senha):
         if not nome or not email or not senha or not confirmar_senha:
             return {
                 "status" : "erro",
@@ -64,5 +70,39 @@ class UsuariosController:
                 "mensagem" : "Código inválido, tente novamente."
             }
         
-        
+    def buscar_email(self, email):
+        usuario = ur.buscar_email(email)
+
+        if not usuario:
+            return {
+                "status" : "erro",
+                "mensagem" : "Usuário não encontrado."
+            }
+        else:
+
+            return {
+                "status" : "ok",
+                "mensagem" : "Usuário encontrado com sucesso."
+            }
     
+    def redefinir_senha(self, email, senha, confirmar_senha):
+        
+        if not senha or not confirmar_senha:
+            return {
+                "status" : "erro",
+                "mensagem" : "É necessário que todos os campos sejam preenchidos."
+            }
+        
+        elif senha != confirmar_senha:
+            return {
+                "status" : "erro",
+                "mensagem" : "As senhas não coincidem, tente novamente."
+            }
+        
+        else:
+            ur.redefinir_senha(email, senha)
+
+            return {
+                "status" : "ok",
+                "mensagem" : "Senha redefinida com sucesso."
+            }

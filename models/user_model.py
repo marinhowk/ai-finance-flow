@@ -12,7 +12,15 @@ class Usuarios:
     @staticmethod
     def validar_senha(senha_digitada, senha_banco):
         senha_hash = hashlib.sha256(senha_digitada.encode()).hexdigest()
-        return senha_hash == senha_banco
+
+        if senha_hash == senha_banco:
+            return {
+                "status" : "ok"
+            }
+        else:
+            return {
+                "status" : "erro"
+            }
     
     @staticmethod
     def redefinir_senha(nova_senha):
